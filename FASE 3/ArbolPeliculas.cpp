@@ -274,6 +274,49 @@ void ArbolPeliculas::poblarComboRecursivo(NodoBST* nodo, QComboBox* combo) {
     }
 }
 
+void ArbolPeliculas::poblarComboCodigoTitulo(QComboBox* combo)
+{
+    if (combo == nullptr) {
+        return;
+    }
+
+    combo->clear();
+
+    poblarComboCodigoTituloRecursivo(
+        raiz,
+        combo
+        );
+}
+
+void ArbolPeliculas::poblarComboCodigoTituloRecursivo(
+    NodoBST* nodo,
+    QComboBox* combo)
+{
+    if (nodo == nullptr) {
+        return;
+    }
+
+    poblarComboCodigoTituloRecursivo(
+        nodo->izquierdo,
+        combo
+        );
+
+    QString textoVisible =
+        nodo->pelicula.codigo +
+        " - " +
+        nodo->pelicula.titulo;
+
+    combo->addItem(
+        textoVisible,
+        nodo->pelicula.codigo
+        );
+
+    poblarComboCodigoTituloRecursivo(
+        nodo->derecho,
+        combo
+        );
+}
+
 // --- MÉTODO AUXILIAR PARA PINTAR LA FILA ---
 void ArbolPeliculas::insertarFilaTabla(NodoBST* nodo, QTableWidget* tabla, int& filaActual) {
     tabla->insertRow(filaActual);

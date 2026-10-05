@@ -14,6 +14,7 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+class QComboBox;
 
 class MainWindow : public QMainWindow
 {
@@ -118,9 +119,30 @@ private slots:
 
     void on_cbOrdenFunciones_currentTextChanged(const QString &arg1);
 
+    void on_cmbSedeReserva_currentIndexChanged(int index);
+
+    void on_btnRegistrarSede_clicked();
+
+    void on_btnConsultarPeliculasSede_clicked();
+
+    void on_btnBuscarRutaSedes_clicked();
+
+    void on_btnActualizarRankingSedes_clicked();
+
+    void on_btnConsultarSedesPeliculaCliente_clicked();
+
+    void on_cmbPeliculaFuncionesCliente_currentIndexChanged(int index);
+
+    void on_btnConsultarFuncionesCliente_clicked();
+
+    void on_btnConsultarSedesSimilaresCliente_clicked();
+
+    void on_btnReporteGrafoSedes_clicked();
+
+    void on_btnReporteListaAdyacencia_clicked();
+
 private:
     Ui::MainWindow *ui;
-
     // Tu árbol principal de la cartelera
     ArbolPeliculas* arbolCartelera;
     ListaSolicitudes* listaSolicitudes;
@@ -140,6 +162,23 @@ private:
     QString peliculaActiva = "";
     void cargarDatosPerfil();
     void sincronizarGrafoConFunciones();
+
+    void refrescarControlesE4();
+
+    void poblarComboSedes(
+        QComboBox* combo
+        );
+
+    void poblarSedesPorPelicula(
+        QComboBox* combo,
+        const QString& codigoPelicula
+        );
+
+    void poblarFuncionesPorPeliculaYSede(
+        QComboBox* combo,
+        const QString& codigoPelicula,
+        const QString& codigoSede
+        );
 
 };
 

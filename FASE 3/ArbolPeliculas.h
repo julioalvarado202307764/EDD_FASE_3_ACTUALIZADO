@@ -28,6 +28,10 @@ private:
     // Método auxiliar para no repetir código visual
     void insertarFilaTabla(NodoBST* nodo, QTableWidget* tabla, int& filaActual);
     Pelicula* buscarPorTituloRecursivo(NodoBST* nodo, QString titulo); // NUEVO MÉTODO
+    void poblarComboCodigoTituloRecursivo(
+        NodoBST* nodo,
+        QComboBox* combo
+        );
 public:
     ArbolPeliculas();
 
@@ -45,6 +49,7 @@ public:
     QString obtenerAlertasExpiracion();
     bool eliminarPelicula(QString codigo);
     void poblarComboUI(QComboBox* combo);
+    void poblarComboCodigoTitulo(QComboBox* combo);
     Pelicula* buscarPeliculaPorTitulo(QString titulo); // NUEVO MÉTODO
 };
 

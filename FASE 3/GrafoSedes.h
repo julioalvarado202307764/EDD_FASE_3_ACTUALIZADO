@@ -188,6 +188,10 @@ public:
 
     std::vector<SedeSimilar> obtenerSedesSimilares(
         const std::string& codigoSede) const;
+
+    bool generarReporteGrafoGraphviz() const;
+
+    bool generarReporteListaAdyacenciaGraphviz() const;
 };
 
 #endif // GRAFOSEDES_H

@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="pageLogin">
        <widget class="QTabWidget" name="tabWidget_2">
@@ -38,7 +38,7 @@
 }</string>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_11">
          <attribute name="title">
@@ -449,7 +449,7 @@ QPushButton:hover {
 }</string>
         </property>
         <property name="currentIndex">
-         <number>3</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
@@ -1225,7 +1225,7 @@ QPushButton:hover {
          <widget class="QPushButton" name="btnCrearFuncion">
           <property name="geometry">
            <rect>
-            <x>490</x>
+            <x>470</x>
             <y>410</y>
             <width>211</width>
             <height>31</height>
@@ -1270,8 +1270,8 @@ QPushButton:hover {
          <widget class="QLabel" name="label_65">
           <property name="geometry">
            <rect>
-            <x>110</x>
-            <y>160</y>
+            <x>70</x>
+            <y>110</y>
             <width>221</width>
             <height>211</height>
            </rect>
@@ -1289,10 +1289,10 @@ QPushButton:hover {
          <widget class="QWidget" name="formLayoutWidget_2">
           <property name="geometry">
            <rect>
-            <x>420</x>
-            <y>190</y>
-            <width>321</width>
-            <height>191</height>
+            <x>380</x>
+            <y>140</y>
+            <width>371</width>
+            <height>251</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_2">
@@ -1337,14 +1337,14 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_66">
              <property name="text">
               <string>Sala:</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="3" column="1">
             <widget class="QComboBox" name="comboSala">
              <property name="styleSheet">
               <string notr="true">QComboBox {
@@ -1389,7 +1389,7 @@ QComboBox QAbstractItemView {
              </item>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_8">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -1405,7 +1405,7 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="4" column="1">
             <widget class="QLineEdit" name="txtHorario">
              <property name="styleSheet">
               <string notr="true">QLineEdit {
@@ -1424,7 +1424,7 @@ QLineEdit:focus {
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="label_6">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -1440,7 +1440,7 @@ QLineEdit:focus {
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="5" column="1">
             <widget class="QSpinBox" name="spinFilas">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -1514,7 +1514,7 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="6" column="0">
             <widget class="QLabel" name="label_7">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -1530,7 +1530,7 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="6" column="1">
             <widget class="QSpinBox" name="spinColumnas">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -1601,6 +1601,76 @@ QSpinBox::down-arrow {
     border-right: 4px solid transparent;
     border-top: 5px solid #ffffff;
 }</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblFechaFuncion">
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    color: #f0f0f0; /* Un blanco/gris muy claro para no cansar la vista */
+    font-family: &quot;Segoe UI&quot;, Helvetica, Arial, sans-serif; /* Tipografía moderna y limpia */
+    font-size: 13px; /* Tamaño estándar legible */
+    background-color: transparent; /* Transparente para que se vea tu fondo oscuro */
+    border: none;
+}</string>
+             </property>
+             <property name="text">
+              <string>Fecha:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDateEdit" name="dateFechaFuncion">
+             <property name="displayFormat">
+              <string>yyyy-MM-dd</string>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lblSedeFuncion">
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    color: #f0f0f0; /* Un blanco/gris muy claro para no cansar la vista */
+    font-family: &quot;Segoe UI&quot;, Helvetica, Arial, sans-serif; /* Tipografía moderna y limpia */
+    font-size: 13px; /* Tamaño estándar legible */
+    background-color: transparent; /* Transparente para que se vea tu fondo oscuro */
+    border: none;
+}</string>
+             </property>
+             <property name="text">
+              <string>Sede:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="cmbSedeFuncion">
+             <property name="styleSheet">
+              <string notr="true">QComboBox {
+    background-color: #2b2b2b; /* Fondo gris oscuro */
+    color: white;              /* Texto blanco */
+    border: 1px solid #555555; /* Borde gris sutil */
+    border-radius: 4px;        /* Bordes ligeramente redondeados */
+    padding: 5px;              /* Espacio interno para que el texto respire */
+}
+
+QComboBox:hover {
+    border: 1px solid #888888; /* El borde se ilumina un poco al pasar el ratón */
+}
+
+/* Estilo de la lista que se abre hacia abajo */
+QComboBox QAbstractItemView {
+    background-color: #2b2b2b; 
+    color: white;              
+    selection-background-color: #0984e3; /* Fondo azul (mismo del botón) al seleccionar */
+    selection-color: white;
+}</string>
+             </property>
+             <property name="editable">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -1686,9 +1756,9 @@ QLineEdit:focus {
           <property name="geometry">
            <rect>
             <x>430</x>
-            <y>330</y>
+            <y>270</y>
             <width>381</width>
-            <height>231</height>
+            <height>279</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout">
@@ -1728,33 +1798,14 @@ QLineEdit:focus {
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="txtEditPelicula">
-             <property name="styleSheet">
-              <string notr="true">QLineEdit {
-    background-color: #2b2b2b;
-    color: white;
-    border: 1px solid #555555;
-    border-radius: 4px;
-    padding: 5px;
-}
-
-/* Efecto cuando haces clic para escribir adentro */
-QLineEdit:focus {
-    border: 1px solid #0984e3; /* El borde se pone azul para indicar que está activo */
-    background-color: #333333; /* El fondo se aclara un poco */
-}</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_60">
              <property name="text">
               <string>Horario:</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="4" column="1">
             <widget class="QLineEdit" name="txtEditHorario">
              <property name="styleSheet">
               <string notr="true">QLineEdit {
@@ -1773,14 +1824,14 @@ QLineEdit:focus {
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="5" column="0">
             <widget class="QLabel" name="label_61">
              <property name="text">
               <string>Sala:</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="5" column="1">
             <widget class="QLineEdit" name="txtEditSala">
              <property name="styleSheet">
               <string notr="true">QLineEdit {
@@ -1799,14 +1850,14 @@ QLineEdit:focus {
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
+           <item row="6" column="0">
             <widget class="QLabel" name="label_62">
              <property name="text">
               <string>Fila:</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="1">
+           <item row="6" column="1">
             <widget class="QSpinBox" name="spinEditFilas">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -1880,14 +1931,14 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
+           <item row="7" column="0">
             <widget class="QLabel" name="label_63">
              <property name="text">
               <string>Columnas:</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
+           <item row="7" column="1">
             <widget class="QSpinBox" name="spinEditColumnas">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -1961,6 +2012,80 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cmbEditPelicula">
+             <property name="styleSheet">
+              <string notr="true">QComboBox {
+    background-color: #2b2b2b; /* Fondo gris oscuro */
+    color: white;              /* Texto blanco */
+    border: 1px solid #555555; /* Borde gris sutil */
+    border-radius: 4px;        /* Bordes ligeramente redondeados */
+    padding: 5px;              /* Espacio interno para que el texto respire */
+}
+
+QComboBox:hover {
+    border: 1px solid #888888; /* El borde se ilumina un poco al pasar el ratón */
+}
+
+/* Estilo de la lista que se abre hacia abajo */
+QComboBox QAbstractItemView {
+    background-color: #2b2b2b; 
+    color: white;              
+    selection-background-color: #0984e3; /* Fondo azul (mismo del botón) al seleccionar */
+    selection-color: white;
+}</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lblEditFechaFuncion">
+             <property name="text">
+              <string>Fecha: </string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDateEdit" name="dateEditFechaFuncion">
+             <property name="displayFormat">
+              <string>yyyy-MM-dd</string>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblEditSedeFuncion">
+             <property name="text">
+              <string>Sede:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="cmbEditSedeFuncion">
+             <property name="styleSheet">
+              <string notr="true">QComboBox {
+    background-color: #2b2b2b; /* Fondo gris oscuro */
+    color: white;              /* Texto blanco */
+    border: 1px solid #555555; /* Borde gris sutil */
+    border-radius: 4px;        /* Bordes ligeramente redondeados */
+    padding: 5px;              /* Espacio interno para que el texto respire */
+}
+
+QComboBox:hover {
+    border: 1px solid #888888; /* El borde se ilumina un poco al pasar el ratón */
+}
+
+/* Estilo de la lista que se abre hacia abajo */
+QComboBox QAbstractItemView {
+    background-color: #2b2b2b; 
+    color: white;              
+    selection-background-color: #0984e3; /* Fondo azul (mismo del botón) al seleccionar */
+    selection-color: white;
+}</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QPushButton" name="btnBuscarFuncion">
@@ -2024,8 +2149,8 @@ QPushButton:hover {
          <widget class="QLabel" name="label_64">
           <property name="geometry">
            <rect>
-            <x>540</x>
-            <y>60</y>
+            <x>530</x>
+            <y>0</y>
             <width>211</width>
             <height>181</height>
            </rect>
@@ -2094,7 +2219,7 @@ QPushButton:hover {
           <property name="geometry">
            <rect>
             <x>540</x>
-            <y>290</y>
+            <y>230</y>
             <width>271</width>
             <height>31</height>
            </rect>
@@ -2140,7 +2265,7 @@ QComboBox QAbstractItemView {
           <property name="geometry">
            <rect>
             <x>430</x>
-            <y>300</y>
+            <y>240</y>
             <width>101</width>
             <height>16</height>
            </rect>
@@ -2159,9 +2284,353 @@ QComboBox QAbstractItemView {
           </property>
          </widget>
         </widget>
+        <widget class="QWidget" name="tabGrafoAdmin">
+         <attribute name="title">
+          <string>Sedes y Grafo</string>
+         </attribute>
+         <widget class="QTabWidget" name="tabWidgetGrafoAdmin">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>40</y>
+            <width>831</width>
+            <height>591</height>
+           </rect>
+          </property>
+          <property name="currentIndex">
+           <number>3</number>
+          </property>
+          <widget class="QWidget" name="tab_18">
+           <attribute name="title">
+            <string>Registrar sede</string>
+           </attribute>
+           <widget class="QGroupBox" name="grpRegistrarSedeAdmin">
+            <property name="geometry">
+             <rect>
+              <x>50</x>
+              <y>130</y>
+              <width>381</width>
+              <height>201</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Datos de la sede</string>
+            </property>
+            <widget class="QWidget" name="formLayoutWidget_5">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>40</y>
+               <width>311</width>
+               <height>151</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formRegistroSedeAdmin">
+              <item row="0" column="0">
+               <widget class="QLabel" name="lblCodigoSedeAdmin">
+                <property name="text">
+                 <string>Código:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="txtCodigoSedeAdmin"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblNombreSedeAdmin">
+                <property name="text">
+                 <string>Nombre:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="txtNombreSedeAdmin"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="lblDireccionSedeAdmin">
+                <property name="text">
+                 <string>Dirección:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="txtDireccionSedeAdmin"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="lblCantidadSalasSedeAdmin">
+                <property name="text">
+                 <string>Cantidad de salas:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinCantidadSalasSedeAdmin">
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="lblTelefonoSedeAdmin">
+                <property name="text">
+                 <string>Teléfono:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="txtTelefonoSedeAdmin"/>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+           <widget class="QPushButton" name="btnRegistrarSede">
+            <property name="geometry">
+             <rect>
+              <x>180</x>
+              <y>360</y>
+              <width>121</width>
+              <height>24</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Registrar sede</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tab_19">
+           <attribute name="title">
+            <string>Películas por sede</string>
+           </attribute>
+           <widget class="QGroupBox" name="grpConsultaPeliculasSedeAdmin">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>30</y>
+              <width>341</width>
+              <height>231</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Seleccionar sede</string>
+            </property>
+            <widget class="QPushButton" name="btnConsultarPeliculasSede">
+             <property name="geometry">
+              <rect>
+               <x>70</x>
+               <y>140</y>
+               <width>141</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Consultar películas</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="lblSedePeliculasAdmin">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>70</y>
+               <width>51</width>
+               <height>21</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Sede:</string>
+             </property>
+            </widget>
+            <widget class="QComboBox" name="cmbSedePeliculasAdmin">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>70</y>
+               <width>131</width>
+               <height>24</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QTableWidget" name="tblPeliculasSedeAdmin">
+            <property name="geometry">
+             <rect>
+              <x>190</x>
+              <y>320</y>
+              <width>211</width>
+              <height>192</height>
+             </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <property name="columnCount">
+             <number>2</number>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Código</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Título</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabRutaSedesAdmin">
+           <attribute name="title">
+            <string>Ruta BFS</string>
+           </attribute>
+           <widget class="QGroupBox" name="grpRutaSedesAdmin">
+            <property name="geometry">
+             <rect>
+              <x>40</x>
+              <y>60</y>
+              <width>361</width>
+              <height>211</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Buscar camino entre sedes</string>
+            </property>
+            <widget class="QWidget" name="formLayoutWidget_6">
+             <property name="geometry">
+              <rect>
+               <x>50</x>
+               <y>70</y>
+               <width>241</width>
+               <height>71</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout_5">
+              <item row="0" column="0">
+               <widget class="QLabel" name="lblOrigenBFS">
+                <property name="text">
+                 <string>Origen:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="cmbSedeOrigenBFS"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblDestinoBFS">
+                <property name="text">
+                 <string>Destino:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="cmbSedeDestinoBFS"/>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QPushButton" name="btnBuscarRutaSedes">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>160</y>
+               <width>151</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Buscar ruta BFS</string>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QLabel" name="lblResultadoBFS">
+            <property name="geometry">
+             <rect>
+              <x>90</x>
+              <y>300</y>
+              <width>271</width>
+              <height>31</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="text">
+             <string>Selecciona una sede de origen y una de destino.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::TextInteractionFlag::LinksAccessibleByMouse|Qt::TextInteractionFlag::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabRankingSedesAdmin">
+           <attribute name="title">
+            <string>Ranking</string>
+           </attribute>
+           <widget class="QPushButton" name="btnActualizarRankingSedes">
+            <property name="geometry">
+             <rect>
+              <x>320</x>
+              <y>130</y>
+              <width>171</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Actualizar ranking</string>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tblRankingSedesAdmin">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>230</y>
+              <width>441</width>
+              <height>192</height>
+             </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Sede A</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Sede B</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Películas compartidas</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
+         </widget>
+        </widget>
         <widget class="QWidget" name="tab_7">
          <attribute name="title">
-          <string>Visor de Reportes</string>
+          <string>Reportes</string>
          </attribute>
          <widget class="QLabel" name="label_69">
           <property name="geometry">
@@ -2347,6 +2816,32 @@ QPushButton:checked {
            </item>
           </layout>
          </widget>
+         <widget class="QPushButton" name="btnReporteGrafoSedes">
+          <property name="geometry">
+           <rect>
+            <x>80</x>
+            <y>480</y>
+            <width>80</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Grafo Sedes</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="btnReporteListaAdyacencia">
+          <property name="geometry">
+           <rect>
+            <x>190</x>
+            <y>480</y>
+            <width>131</width>
+            <height>24</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Lista Adyacencia</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="tab_17">
          <attribute name="title">
@@ -2452,7 +2947,7 @@ QPushButton:checked {
         </widget>
         <widget class="QWidget" name="tab_4">
          <attribute name="title">
-          <string>Gestion de Solicitudes</string>
+          <string>Solicitudes</string>
          </attribute>
          <widget class="QTableWidget" name="tablaAdminSolicitudes">
           <property name="geometry">
@@ -2723,7 +3218,7 @@ QComboBox:hover {
         </widget>
         <widget class="QWidget" name="tab_5">
          <attribute name="title">
-          <string>Gestión de Promociones</string>
+          <string>Promociones</string>
          </attribute>
          <widget class="QLineEdit" name="txtCodigoPromo">
           <property name="geometry">
@@ -3498,7 +3993,7 @@ QPushButton:hover {
             <x>72</x>
             <y>290</y>
             <width>311</width>
-            <height>151</height>
+            <height>180</height>
            </rect>
           </property>
           <layout class="QFormLayout" name="formLayout_4">
@@ -3543,7 +4038,7 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="2" column="0">
             <widget class="QLabel" name="label_10">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -3559,7 +4054,7 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
+           <item row="2" column="1">
             <widget class="QComboBox" name="cbFuncionesDisponibles">
              <property name="styleSheet">
               <string notr="true">QComboBox {
@@ -3584,7 +4079,7 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_12">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -3600,7 +4095,7 @@ QComboBox QAbstractItemView {
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="3" column="1">
             <widget class="QSpinBox" name="spinReservaFila">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -3674,7 +4169,7 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
+           <item row="4" column="0">
             <widget class="QLabel" name="label_13">
              <property name="styleSheet">
               <string notr="true">QLabel {
@@ -3690,7 +4185,7 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
+           <item row="4" column="1">
             <widget class="QSpinBox" name="spinReservaColumna">
              <property name="styleSheet">
               <string notr="true">/* Campo principal */
@@ -3764,13 +4259,45 @@ QSpinBox::down-arrow {
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblSedeReserva">
+             <property name="text">
+              <string>Sede:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="cmbSedeReserva">
+             <property name="styleSheet">
+              <string notr="true">QComboBox {
+    background-color: #2b2b2b; /* Fondo gris oscuro */
+    color: white;              /* Texto blanco */
+    border: 1px solid #555555; /* Borde gris sutil */
+    border-radius: 4px;        /* Bordes ligeramente redondeados */
+    padding: 5px;              /* Espacio interno para que el texto respire */
+}
+
+QComboBox:hover {
+    border: 1px solid #888888; /* El borde se ilumina un poco al pasar el ratón */
+}
+
+/* Estilo de la lista que se abre hacia abajo */
+QComboBox QAbstractItemView {
+    background-color: #2b2b2b; 
+    color: white;              
+    selection-background-color: #0984e3; /* Fondo azul (mismo del botón) al seleccionar */
+    selection-color: white;
+}</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QPushButton" name="btnReservar">
           <property name="geometry">
            <rect>
             <x>70</x>
-            <y>450</y>
+            <y>510</y>
             <width>311</width>
             <height>28</height>
            </rect>
@@ -3948,6 +4475,293 @@ QPushButton:hover {
             </widget>
            </item>
           </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tab_20">
+         <attribute name="title">
+          <string>Sedes y Funciones</string>
+         </attribute>
+         <widget class="QTabWidget" name="tabWidget_3">
+          <property name="geometry">
+           <rect>
+            <x>20</x>
+            <y>30</y>
+            <width>811</width>
+            <height>531</height>
+           </rect>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tabSedesPeliculaCliente">
+           <attribute name="title">
+            <string>Película → sedes</string>
+           </attribute>
+           <widget class="QGroupBox" name="grpSedesPeliculaCliente">
+            <property name="geometry">
+             <rect>
+              <x>30</x>
+              <y>40</y>
+              <width>311</width>
+              <height>161</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Disponibilidad por película</string>
+            </property>
+            <widget class="QLabel" name="lblPeliculaSedesCliente">
+             <property name="geometry">
+              <rect>
+               <x>20</x>
+               <y>60</y>
+               <width>61</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Película:</string>
+             </property>
+            </widget>
+            <widget class="QComboBox" name="cmbPeliculaSedesCliente">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>60</y>
+               <width>181</width>
+               <height>24</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="btnConsultarSedesPeliculaCliente">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>110</y>
+               <width>161</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Consultar sedes</string>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QTableWidget" name="tblSedesPeliculaCliente">
+            <property name="geometry">
+             <rect>
+              <x>80</x>
+              <y>250</y>
+              <width>711</width>
+              <height>192</height>
+             </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Sede</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nombre</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Funciones (fecha / horario / sala)</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabFuncionesSedeCliente">
+           <attribute name="title">
+            <string>Película + sede</string>
+           </attribute>
+           <widget class="QGroupBox" name="grpFuncionesSedeCliente">
+            <property name="geometry">
+             <rect>
+              <x>80</x>
+              <y>90</y>
+              <width>361</width>
+              <height>171</height>
+             </rect>
+            </property>
+            <property name="title">
+             <string>Funciones disponibles</string>
+            </property>
+            <widget class="QWidget" name="formLayoutWidget_7">
+             <property name="geometry">
+              <rect>
+               <x>30</x>
+               <y>30</y>
+               <width>251</width>
+               <height>80</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout_6">
+              <item row="0" column="0">
+               <widget class="QLabel" name="lblPeliculaFuncionesCliente">
+                <property name="text">
+                 <string>Película:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="cmbPeliculaFuncionesCliente"/>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="lblSedeFuncionesCliente">
+                <property name="text">
+                 <string>Sede:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="cmbSedeFuncionesCliente">
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QPushButton" name="btnConsultarFuncionesCliente">
+             <property name="geometry">
+              <rect>
+               <x>50</x>
+               <y>120</y>
+               <width>131</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Consultar funciones</string>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QTableWidget" name="tblFuncionesClienteGrafo">
+            <property name="geometry">
+             <rect>
+              <x>200</x>
+              <y>280</y>
+              <width>421</width>
+              <height>192</height>
+             </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Función</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Fecha</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Horario</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Sala</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="grpSedesSimilaresCliente">
+           <attribute name="title">
+            <string>Afinidad entre sedes</string>
+           </attribute>
+           <widget class="QLabel" name="lblSedeSimilarCliente">
+            <property name="geometry">
+             <rect>
+              <x>120</x>
+              <y>150</y>
+              <width>49</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Sede:</string>
+            </property>
+           </widget>
+           <widget class="QComboBox" name="cmbSedeSimilarCliente">
+            <property name="geometry">
+             <rect>
+              <x>220</x>
+              <y>140</y>
+              <width>141</width>
+              <height>24</height>
+             </rect>
+            </property>
+           </widget>
+           <widget class="QPushButton" name="btnConsultarSedesSimilaresCliente">
+            <property name="geometry">
+             <rect>
+              <x>110</x>
+              <y>200</y>
+              <width>181</width>
+              <height>24</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>Consultar similares</string>
+            </property>
+           </widget>
+           <widget class="QTableWidget" name="tblSedesSimilaresCliente">
+            <property name="geometry">
+             <rect>
+              <x>190</x>
+              <y>270</y>
+              <width>361</width>
+              <height>192</height>
+             </rect>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Sede</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nombre</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Afinidad</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
          </widget>
         </widget>
         <widget class="QWidget" name="tab_16">
@@ -4538,7 +5352,7 @@ QPushButton:hover {
         </widget>
         <widget class="QWidget" name="tab_8">
          <attribute name="title">
-          <string>Visor Reportes</string>
+          <string>Reportes</string>
          </attribute>
          <widget class="QLabel" name="lblVisorUsuario">
           <property name="geometry">

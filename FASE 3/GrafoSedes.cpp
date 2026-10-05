@@ -3,7 +3,44 @@
 #include "NodoAVL.h"
 
 #include <algorithm>
+#include <fstream>
+#include <QProcess>
+#include <QStringList>
+namespace {
 
+std::string escaparDOT(const std::string& texto)
+{
+    std::string resultado;
+
+    for (char c : texto) {
+
+        switch (c) {
+
+        case '\\':
+            resultado += "\\\\";
+            break;
+
+        case '"':
+            resultado += "\\\"";
+            break;
+
+        case '\n':
+            resultado += "\\n";
+            break;
+
+        case '\r':
+            break;
+
+        default:
+            resultado += c;
+            break;
+        }
+    }
+
+    return resultado;
+}
+
+}
 NodoAdyacencia::NodoAdyacencia(NodoGrafo* destino, int peso)
     : destino(destino),
     peso(peso),
@@ -1007,4 +1044,294 @@ GrafoSedes::obtenerSedesSimilares(
         });
 
     return similares;
+}
+
+// ============================================================
+// REPORTE GRAPHVIZ — GRAFO NO DIRIGIDO
+// ============================================================
+
+bool GrafoSedes::generarReporteGrafoGraphviz() const
+{
+    std::ofstream archivo(
+        "reporte_grafo_sedes.dot"
+        );
+
+    if (!archivo.is_open()) {
+        return false;
+    }
+
+    archivo << "graph GrafoSedes {\n";
+    archivo << "  rankdir=LR;\n";
+    archivo << "  graph [bgcolor=\"white\"];\n";
+    archivo << "  node [shape=box, style=\"rounded,filled\", "
+               "fillcolor=\"lightblue\"];\n";
+    archivo << "  edge [fontname=\"Arial\"];\n\n";
+
+    // --------------------------------------------------------
+    // VÉRTICES
+    // --------------------------------------------------------
+
+    const NodoGrafo* vertice =
+        primero;
+
+    while (vertice != nullptr) {
+
+        std::string codigo =
+            escaparDOT(
+                vertice->sede.codigo
+                );
+
+        std::string nombre =
+            escaparDOT(
+                vertice->sede.nombre
+                );
+
+        archivo
+            << "  \""
+            << codigo
+            << "\" [label=\""
+            << codigo
+            << "\\n"
+            << nombre
+            << "\"];\n";
+
+        vertice =
+            vertice->siguiente;
+    }
+
+    archivo << "\n";
+
+    // --------------------------------------------------------
+    // ARISTAS
+    //
+    // Cada relación física existe en ambos sentidos dentro
+    // de la lista de adyacencia. Se dibuja únicamente cuando
+    // codigoOrigen < codigoDestino para no duplicarla.
+    // --------------------------------------------------------
+
+    vertice = primero;
+
+    while (vertice != nullptr) {
+
+        const NodoAdyacencia* adyacente =
+            vertice->adyacencias;
+
+        while (adyacente != nullptr) {
+
+            if (adyacente->destino != nullptr &&
+                vertice->sede.codigo <
+                    adyacente->destino->sede.codigo) {
+
+                archivo
+                    << "  \""
+                    << escaparDOT(
+                           vertice->sede.codigo
+                           )
+                    << "\" -- \""
+                    << escaparDOT(
+                           adyacente->destino
+                               ->sede.codigo
+                           )
+                    << "\" [label=\"Peso: "
+                    << adyacente->peso
+                    << "\"];\n";
+            }
+
+            adyacente =
+                adyacente->siguiente;
+        }
+
+        vertice =
+            vertice->siguiente;
+    }
+
+    archivo << "}\n";
+
+    archivo.close();
+
+    QProcess proceso;
+
+    proceso.start(
+        "dot",
+        QStringList()
+            << "-Tpng"
+            << "reporte_grafo_sedes.dot"
+            << "-o"
+            << "reporte_grafo_sedes.png"
+        );
+
+    if (!proceso.waitForFinished()) {
+        return false;
+    }
+
+    return
+        proceso.exitStatus() ==
+            QProcess::NormalExit &&
+        proceso.exitCode() == 0;
+}
+
+// ============================================================
+// REPORTE GRAPHVIZ — LISTA DE ADYACENCIA
+// ============================================================
+
+bool GrafoSedes::generarReporteListaAdyacenciaGraphviz() const
+{
+    std::ofstream archivo(
+        "reporte_lista_adyacencia.dot"
+        );
+
+    if (!archivo.is_open()) {
+        return false;
+    }
+
+    archivo << "digraph ListaAdyacencia {\n";
+    archivo << "  rankdir=LR;\n";
+    archivo << "  graph [bgcolor=\"white\"];\n";
+    archivo << "  node [shape=record];\n";
+    archivo << "  edge [fontname=\"Arial\"];\n\n";
+
+    const NodoGrafo* vertice =
+        primero;
+
+    int indiceVertice = 0;
+
+    while (vertice != nullptr) {
+
+        std::string idVertice =
+            "vertice_" +
+            std::to_string(
+                indiceVertice
+                );
+
+        archivo
+            << "  subgraph cluster_"
+            << indiceVertice
+            << " {\n";
+
+        archivo
+            << "    label=\""
+            << escaparDOT(
+                   vertice->sede.codigo
+                   )
+            << "\";\n";
+
+        archivo
+            << "    color=\"gray70\";\n";
+
+        archivo
+            << "    \""
+            << idVertice
+            << "\" [style=filled, "
+               "fillcolor=\"lightblue\", "
+               "label=\"{"
+            << escaparDOT(
+                   vertice->sede.codigo
+                   )
+            << "|"
+            << escaparDOT(
+                   vertice->sede.nombre
+                   )
+            << "}\"];\n";
+
+        const NodoAdyacencia* adyacente =
+            vertice->adyacencias;
+
+        std::string idAnterior =
+            idVertice;
+
+        int indiceAdyacencia = 0;
+
+        if (adyacente == nullptr) {
+
+            std::string idNull =
+                "null_" +
+                std::to_string(
+                    indiceVertice
+                    );
+
+            archivo
+                << "    \""
+                << idNull
+                << "\" [shape=plaintext, "
+                   "label=\"NULL\"];\n";
+
+            archivo
+                << "    \""
+                << idAnterior
+                << "\" -> \""
+                << idNull
+                << "\" [style=dashed];\n";
+        }
+
+        while (adyacente != nullptr) {
+
+            std::string idActual =
+                "ady_" +
+                std::to_string(
+                    indiceVertice
+                    ) +
+                "_" +
+                std::to_string(
+                    indiceAdyacencia
+                    );
+
+            archivo
+                << "    \""
+                << idActual
+                << "\" [label=\"{"
+                << escaparDOT(
+                       adyacente->destino
+                           ->sede.codigo
+                       )
+                << "|Peso: "
+                << adyacente->peso
+                << "}\"];\n";
+
+            archivo
+                << "    \""
+                << idAnterior
+                << "\" -> \""
+                << idActual
+                << "\";\n";
+
+            idAnterior =
+                idActual;
+
+            indiceAdyacencia++;
+
+            adyacente =
+                adyacente->siguiente;
+        }
+
+        archivo << "  }\n\n";
+
+        indiceVertice++;
+
+        vertice =
+            vertice->siguiente;
+    }
+
+    archivo << "}\n";
+
+    archivo.close();
+
+    QProcess proceso;
+
+    proceso.start(
+        "dot",
+        QStringList()
+            << "-Tpng"
+            << "reporte_lista_adyacencia.dot"
+            << "-o"
+            << "reporte_lista_adyacencia.png"
+        );
+
+    if (!proceso.waitForFinished()) {
+        return false;
+    }
+
+    return
+        proceso.exitStatus() ==
+            QProcess::NormalExit &&
+        proceso.exitCode() == 0;
 }

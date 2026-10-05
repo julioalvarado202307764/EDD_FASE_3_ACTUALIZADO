@@ -9,6 +9,7 @@ CONFIG += c++17
 SOURCES += \
     ArbolAVL.cpp \
     ArbolB.cpp \
+    ArbolMerkle.cpp \
     ArbolPeliculas.cpp \
     GrafoSedes.cpp \
     ListaPromociones.cpp \
@@ -16,13 +17,16 @@ SOURCES += \
     MatrizDispersa.cpp \
     NodoAVL.cpp \
     NodoB.cpp \
+    SHA256.cpp \
     TablaHash.cpp \
+    Transaccion.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     ArbolAVL.h \
     ArbolB.h \
+    ArbolMerkle.h \
     ArbolPeliculas.h \
     Beneficio.h \
     GrafoSedes.h \
@@ -34,12 +38,15 @@ HEADERS += \
     NodoBST.h \
     NodoHash.h \
     NodoMatriz.h \
+    NodoMerkle.h \
     NodoSolicitud.h \
     Pelicula.h \
     Promocion.h \
+    SHA256.h \
     Sede.h \
     Solicitud.h \
     TablaHash.h \
+    Transaccion.h \
     mainwindow.h
 
 FORMS += \
@@ -52,3 +59,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     images.qrc
+
+DISTFILES +=

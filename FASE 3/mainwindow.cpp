@@ -44,6 +44,16 @@ MainWindow::MainWindow(QWidget *parent)
     tablaReservas = new TablaHash();
     // Fase 3
     grafoSedes = new GrafoSedes();
+
+    ui->dateFechaFuncion->setDate(
+        QDate::currentDate()
+        );
+
+    ui->dateEditFechaFuncion->setDate(
+        QDate::currentDate()
+        );
+
+    refrescarControlesE4();
 }
 
 MainWindow::~MainWindow()
@@ -72,6 +82,319 @@ void MainWindow::sincronizarGrafoConFunciones()
     grafoSedes->recalcularRelaciones(*arbolFunciones);
 }
 
+void MainWindow::poblarComboSedes(
+    QComboBox* combo)
+{
+    if (combo == nullptr ||
+        grafoSedes == nullptr) {
+        return;
+    }
+
+    combo->clear();
+
+    const NodoGrafo* actual =
+        grafoSedes->obtenerPrimeraSede();
+
+    while (actual != nullptr) {
+
+        QString codigo =
+            QString::fromStdString(
+                actual->sede.codigo
+                );
+
+        QString nombre =
+            QString::fromStdString(
+                actual->sede.nombre
+                );
+
+        combo->addItem(
+            codigo + " - " + nombre,
+            codigo
+            );
+
+        actual =
+            actual->siguiente;
+    }
+}
+
+
+void MainWindow::poblarSedesPorPelicula(
+    QComboBox* combo,
+    const QString& codigoPelicula)
+{
+    if (combo == nullptr) {
+        return;
+    }
+
+    combo->clear();
+
+    if (grafoSedes == nullptr ||
+        arbolFunciones == nullptr ||
+        codigoPelicula.isEmpty()) {
+        return;
+    }
+
+    struct ContextoSedePelicula {
+        std::string codigoPelicula;
+        std::string codigoSede;
+        bool encontrada;
+    };
+
+    auto visitarFuncion =
+        [](const NodoAVL* funcion,
+           void* datos) {
+
+            if (funcion == nullptr ||
+                datos == nullptr) {
+                return;
+            }
+
+            ContextoSedePelicula* contexto =
+                static_cast<
+                    ContextoSedePelicula*
+                    >(datos);
+
+            if (
+                funcion->codigo_pelicula_real ==
+                    contexto->codigoPelicula &&
+                funcion->codigo_sede ==
+                    contexto->codigoSede
+                ) {
+                contexto->encontrada = true;
+            }
+        };
+
+    const NodoGrafo* sede =
+        grafoSedes->obtenerPrimeraSede();
+
+    while (sede != nullptr) {
+
+        ContextoSedePelicula contexto {
+            codigoPelicula.toStdString(),
+            sede->sede.codigo,
+            false
+        };
+
+        arbolFunciones->recorrerFunciones(
+            visitarFuncion,
+            &contexto
+            );
+
+        if (contexto.encontrada) {
+
+            QString codigo =
+                QString::fromStdString(
+                    sede->sede.codigo
+                    );
+
+            QString nombre =
+                QString::fromStdString(
+                    sede->sede.nombre
+                    );
+
+            combo->addItem(
+                codigo + " - " + nombre,
+                codigo
+                );
+        }
+
+        sede =
+            sede->siguiente;
+    }
+}
+
+
+void MainWindow::poblarFuncionesPorPeliculaYSede(
+    QComboBox* combo,
+    const QString& codigoPelicula,
+    const QString& codigoSede)
+{
+    if (combo == nullptr) {
+        return;
+    }
+
+    combo->clear();
+
+    if (arbolFunciones == nullptr ||
+        codigoPelicula.isEmpty() ||
+        codigoSede.isEmpty()) {
+        return;
+    }
+
+    struct ContextoFuncionesCombo {
+        std::string codigoPelicula;
+        std::string codigoSede;
+        QComboBox* combo;
+    };
+
+    ContextoFuncionesCombo contexto {
+        codigoPelicula.toStdString(),
+        codigoSede.toStdString(),
+        combo
+    };
+
+    auto visitarFuncion =
+        [](const NodoAVL* funcion,
+           void* datos) {
+
+            if (funcion == nullptr ||
+                datos == nullptr) {
+                return;
+            }
+
+            ContextoFuncionesCombo* contexto =
+                static_cast<
+                    ContextoFuncionesCombo*
+                    >(datos);
+
+            if (
+                funcion->codigo_pelicula_real !=
+                    contexto->codigoPelicula ||
+                funcion->codigo_sede !=
+                    contexto->codigoSede
+                ) {
+                return;
+            }
+
+            QString fecha =
+                QString::fromStdString(
+                    funcion->fecha
+                    );
+
+            if (fecha.isEmpty()) {
+                fecha = "Sin fecha";
+            }
+
+            QString texto =
+                QString::fromStdString(
+                    funcion->codigo_funcion
+                    ) +
+                " - " +
+                fecha +
+                " - " +
+                QString::fromStdString(
+                    funcion->horario
+                    ) +
+                " - " +
+                QString::fromStdString(
+                    funcion->sala
+                    );
+
+            contexto->combo->addItem(
+                texto,
+                QString::fromStdString(
+                    funcion->codigo_funcion
+                    )
+                );
+        };
+
+    arbolFunciones->recorrerFunciones(
+        visitarFuncion,
+        &contexto
+        );
+}
+
+
+void MainWindow::refrescarControlesE4()
+{
+    if (arbolCartelera == nullptr ||
+        grafoSedes == nullptr) {
+        return;
+    }
+
+    // =====================================================
+    // PELÍCULAS — identidad lógica mediante código real
+    // =====================================================
+
+    arbolCartelera->poblarComboCodigoTitulo(
+        ui->comboPeliculas
+        );
+
+    arbolCartelera->poblarComboCodigoTitulo(
+        ui->cmbEditPelicula
+        );
+
+    arbolCartelera->poblarComboCodigoTitulo(
+        ui->cbPeliculasDisponibles
+        );
+
+    arbolCartelera->poblarComboCodigoTitulo(
+        ui->cmbPeliculaSedesCliente
+        );
+
+    arbolCartelera->poblarComboCodigoTitulo(
+        ui->cmbPeliculaFuncionesCliente
+        );
+
+
+    // =====================================================
+    // COMBOS GENERALES DE SEDES
+    // =====================================================
+
+    poblarComboSedes(
+        ui->cmbSedeFuncion
+        );
+
+    poblarComboSedes(
+        ui->cmbEditSedeFuncion
+        );
+
+    poblarComboSedes(
+        ui->cmbSedePeliculasAdmin
+        );
+
+    poblarComboSedes(
+        ui->cmbSedeOrigenBFS
+        );
+
+    poblarComboSedes(
+        ui->cmbSedeDestinoBFS
+        );
+
+    poblarComboSedes(
+        ui->cmbSedeSimilarCliente
+        );
+
+
+    // =====================================================
+    // CLIENTE — SEDES FILTRADAS POR PELÍCULA
+    // =====================================================
+
+    QString peliculaReserva =
+        ui->cbPeliculasDisponibles
+            ->currentData()
+            .toString();
+
+    poblarSedesPorPelicula(
+        ui->cmbSedeReserva,
+        peliculaReserva
+        );
+
+    poblarFuncionesPorPeliculaYSede(
+        ui->cbFuncionesDisponibles,
+        peliculaReserva,
+        ui->cmbSedeReserva
+            ->currentData()
+            .toString()
+        );
+
+
+    QString peliculaConsulta =
+        ui->cmbPeliculaFuncionesCliente
+            ->currentData()
+            .toString();
+
+    poblarSedesPorPelicula(
+        ui->cmbSedeFuncionesCliente,
+        peliculaConsulta
+        );
+
+
+    // La edición no debe seleccionar arbitrariamente
+    // una película/sede si aún no se cargó una función.
+    ui->cmbEditPelicula->setCurrentIndex(-1);
+    ui->cmbEditSedeFuncion->setCurrentIndex(-1);
+}
 
 void MainWindow::on_btnIniciarSesion_clicked()
 {
@@ -86,6 +409,7 @@ void MainWindow::on_btnIniciarSesion_clicked()
     // 1. Validación de credenciales oficiales del Administrador[cite: 1]
     if (correo == "AdminCine@gmail.com" && password == "admin123Pass") {
         ui->stackedWidget->setCurrentIndex(1); // Cambiar a pageAdmin
+        refrescarControlesE4();
         QMessageBox::information(this, "Bienvenido", "Sesión iniciada como Administrador.");
         return;
     }
@@ -102,7 +426,7 @@ void MainWindow::on_btnIniciarSesion_clicked()
             // Cargar datos en la vista del cliente
             cargarDatosPerfil();
             arbolCartelera->poblarTablaInOrden(ui->tablaTaquilla);            listaPromos->poblarArbolUI(ui->arbolPromos);
-            arbolCartelera->poblarComboUI(ui->cbPeliculasDisponibles);
+            refrescarControlesE4();
             QMessageBox::information(this, "Bienvenido", "Hola, " + QString::fromStdString(clienteActual->nombre) + ". Sesión iniciada correctamente.");
 
             ui->txtCorreo->clear();
@@ -576,66 +900,172 @@ void MainWindow::on_btnActualizarTabla_clicked()
     }
 }
 
-//NUEVOS CAMBIOS
 void MainWindow::on_btnCrearFuncion_clicked()
 {
-    // 1. Capturamos los mismos datos de la interfaz de la Fase 1
-    QString pelicula = ui->comboPeliculas->currentText();
-    // El combo ya conserva el código real de la película en userData.
-    // Mantenemos el título para compatibilidad visual de Fase 2 y almacenamos
-    // además el código inequívoco para Fase 3.
-    QString codigoPeliculaReal = ui->comboPeliculas->currentData().toString();
-    QString horario = ui->txtHorario->text();
-    QString sala = ui->comboSala->currentText();
-    int filas = ui->spinFilas->value();
-    int columnas = ui->spinColumnas->value();
+    QString codigoPelicula =
+        ui->comboPeliculas
+            ->currentData()
+            .toString();
 
-    if(filas <= 0 || columnas <= 0 || horario.isEmpty()) {
-        QMessageBox::warning(this, "Error", "Llene todos los campos y use dimensiones válidas.");
+    QString codigoSede =
+        ui->cmbSedeFuncion
+            ->currentData()
+            .toString();
+
+    QString fecha =
+        ui->dateFechaFuncion
+            ->date()
+            .toString("yyyy-MM-dd");
+
+    QString horario =
+        ui->txtHorario
+            ->text()
+            .trimmed();
+
+    QString sala =
+        ui->comboSala
+            ->currentText()
+            .trimmed();
+
+    int filas =
+        ui->spinFilas->value();
+
+    int columnas =
+        ui->spinColumnas->value();
+
+
+    if (codigoPelicula.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Película",
+            "Seleccione una película válida."
+            );
+
         return;
     }
 
-    // 2. NUEVO FASE 2: Generar un código único leyendo el contador sincronizado
-    QString codigoFuncion = "F" + QString("%1").arg(contadorGlobalFunciones, 3, 10, QChar('0'));
-    contadorGlobalFunciones++; // Lo aumentamos para la próxima vez que se presione el botón
 
-    // 3. Insertar en el Árbol AVL
-    // Insertar pasándole las filas y columnas
-    arbolFunciones->insertar(codigoFuncion.toStdString(),
-                             pelicula.toStdString(),
-                             codigoPeliculaReal.toStdString(),
-                             "", // fecha: Fase 2 no la solicita todavía
-                             "", // sede: Fase 2 no la solicita todavía
-                             horario.toStdString(),
-                             sala.toStdString(),
-                             filas,
-                             columnas);
-    // Mantener el grafo sincronizado con el estado vigente del AVL.
-    // Mientras E4 no proporcione fecha/sede desde la UI, esta función manual
-    // no generará relaciones porque codigo_sede permanece vacío.
+    Pelicula* pelicula =
+        arbolCartelera->buscarPelicula(
+            codigoPelicula
+            );
+
+    if (pelicula == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "Película",
+            "La película seleccionada ya no existe."
+            );
+
+        return;
+    }
+
+
+    if (codigoSede.isEmpty() ||
+        grafoSedes->buscarSede(
+            codigoSede.toStdString()
+            ) == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "Sede",
+            "Seleccione una sede válida."
+            );
+
+        return;
+    }
+
+
+    if (horario.isEmpty() ||
+        sala.isEmpty() ||
+        filas <= 0 ||
+        columnas <= 0) {
+
+        QMessageBox::warning(
+            this,
+            "Datos inválidos",
+            "Complete horario, sala y dimensiones válidas."
+            );
+
+        return;
+    }
+
+
+    QString codigoFuncion =
+        "F" +
+        QString("%1")
+            .arg(
+                contadorGlobalFunciones,
+                3,
+                10,
+                QChar('0')
+                );
+
+
+    arbolFunciones->insertar(
+        codigoFuncion.toStdString(),
+        pelicula->titulo.toStdString(),
+        pelicula->codigo.toStdString(),
+        fecha.toStdString(),
+        codigoSede.toStdString(),
+        horario.toStdString(),
+        sala.toStdString(),
+        filas,
+        columnas
+        );
+
+    contadorGlobalFunciones++;
+
     sincronizarGrafoConFunciones();
-    // 4. (Opcional) Guardamos las dimensiones si quieres validar topes al comprar
-    // salaActiva y peliculaActiva ya no son tan necesarias aquí porque el AVL maneja las funciones,
-    // pero puedes guardarlas si tu lógica de validación visual las sigue usando.
-    // ---> AÑADIR ESTO PARA ACTUALIZAR LA TABLA SOLA <---
-    arbolFunciones->poblarTablaUI(ui->tblFunciones);
 
-    QMessageBox::information(this, "Función Creada", "Función " + codigoFuncion + " (" + pelicula + ") agregada al Árbol AVL con éxito.");
+    arbolFunciones->poblarTablaUI(
+        ui->tblFunciones
+        );
+
+    refrescarControlesE4();
+
+    ui->dateFechaFuncion->setDate(
+        QDate::currentDate()
+        );
+
+    QMessageBox::information(
+        this,
+        "Función Creada",
+        "Función " +
+            codigoFuncion +
+            " (" +
+            pelicula->titulo +
+            ") creada correctamente en " +
+            codigoSede +
+            "."
+        );
 }
 
 
-void MainWindow::on_cbPeliculasDisponibles_currentTextChanged(const QString &arg1)
+void MainWindow::on_cbPeliculasDisponibles_currentTextChanged(
+    const QString &arg1)
 {
-    // Si la selección está vacía, limpiamos las funciones
-    if (arg1.isEmpty()) {
-        ui->cbFuncionesDisponibles->clear();
-        return;
-    }
+    Q_UNUSED(arg1);
 
-    // El Árbol AVL filtra y llena el segundo ComboBox automáticamente
-    if (arbolFunciones != nullptr) {
-        arbolFunciones->poblarComboFunciones(arg1, ui->cbFuncionesDisponibles);
-    }
+    QString codigoPelicula =
+        ui->cbPeliculasDisponibles
+            ->currentData()
+            .toString();
+
+    poblarSedesPorPelicula(
+        ui->cmbSedeReserva,
+        codigoPelicula
+        );
+
+    poblarFuncionesPorPeliculaYSede(
+        ui->cbFuncionesDisponibles,
+        codigoPelicula,
+        ui->cmbSedeReserva
+            ->currentData()
+            .toString()
+        );
 }
 
 void MainWindow::on_btnReservar_clicked()
@@ -1791,13 +2221,11 @@ void MainWindow::on_btnCargarPeliculasJSON_clicked()
         ui->tablaCartelera
         );
 
-    arbolCartelera->poblarComboUI(
-        ui->comboPeliculas
-        );
-
     arbolFunciones->poblarTablaUI(
         ui->tblFunciones
         );
+
+    refrescarControlesE4();
 
 
     // =========================================================
@@ -1891,7 +2319,7 @@ void MainWindow::on_btnAgregarPelicula_clicked()
 
     // 5. Actualizar interfaz
     arbolCartelera->poblarTablaInOrden(ui->tablaCartelera);
-    arbolCartelera->poblarComboUI(ui->comboPeliculas);
+    refrescarControlesE4();
 
     QMessageBox::information(this, "Éxito", "Película agregada a la cartelera.");
 
@@ -1934,7 +2362,7 @@ void MainWindow::on_btnEditarPelicula_clicked()
         // 3. Refrescamos la vista
         arbolCartelera->poblarTablaInOrden(ui->tablaCartelera);
 
-        arbolCartelera->poblarComboUI(ui->comboPeliculas);
+        refrescarControlesE4();
 
         QMessageBox::information(this, "Actualizado", "Datos de la película " + codigo + " actualizados.");
 
@@ -1975,7 +2403,7 @@ void MainWindow::on_btnEliminarPelicula_clicked()
         if (eliminada) {
             // Actualizamos la tabla
             arbolCartelera->poblarTablaInOrden(ui->tablaCartelera);
-            arbolCartelera->poblarComboUI(ui->comboPeliculas);
+            refrescarControlesE4();
 
             QMessageBox::information(this, "Eliminada", "La película ha sido retirada de la cartelera.");
 
@@ -2003,112 +2431,354 @@ void MainWindow::on_cbOrdenPeliculas_currentTextChanged(const QString &arg1)
 }
 
 
-void MainWindow::on_tblFunciones_cellClicked(int row, int column)
+void MainWindow::on_tblFunciones_cellClicked(
+    int row,
+    int column)
 {
-    if (ui->tblFunciones->item(row, 0) != nullptr) {
-        ui->txtEditCodFuncion->setText(ui->tblFunciones->item(row, 0)->text());
-        ui->txtEditPelicula->setText(ui->tblFunciones->item(row, 1)->text());
-        ui->txtEditHorario->setText(ui->tblFunciones->item(row, 2)->text());
-        ui->txtEditSala->setText(ui->tblFunciones->item(row, 3)->text());
-        ui->spinEditFilas->setValue(ui->tblFunciones->item(row, 4)->text().toInt());
-        ui->spinEditColumnas->setValue(ui->tblFunciones->item(row, 5)->text().toInt());
+    Q_UNUSED(column);
+
+    if (ui->tblFunciones->item(row, 0) == nullptr) {
+        return;
     }
+
+    QString codigo =
+        ui->tblFunciones
+            ->item(row, 0)
+            ->text();
+
+    NodoAVL* funcion =
+        arbolFunciones->buscarFuncion(
+            codigo
+            );
+
+    if (funcion == nullptr) {
+        return;
+    }
+
+    ui->txtEditCodFuncion->setText(
+        QString::fromStdString(
+            funcion->codigo_funcion
+            )
+        );
+
+    int indicePelicula =
+        ui->cmbEditPelicula->findData(
+            QString::fromStdString(
+                funcion->codigo_pelicula_real
+                )
+            );
+
+    ui->cmbEditPelicula->setCurrentIndex(
+        indicePelicula
+        );
+
+
+    QDate fecha =
+        QDate::fromString(
+            QString::fromStdString(
+                funcion->fecha
+                ),
+            "yyyy-MM-dd"
+            );
+
+    ui->dateEditFechaFuncion->setDate(
+        fecha.isValid()
+            ? fecha
+            : QDate::currentDate()
+        );
+
+
+    int indiceSede =
+        ui->cmbEditSedeFuncion->findData(
+            QString::fromStdString(
+                funcion->codigo_sede
+                )
+            );
+
+    ui->cmbEditSedeFuncion->setCurrentIndex(
+        indiceSede
+        );
+
+
+    ui->txtEditHorario->setText(
+        QString::fromStdString(
+            funcion->horario
+            )
+        );
+
+    ui->txtEditSala->setText(
+        QString::fromStdString(
+            funcion->sala
+            )
+        );
+
+    ui->spinEditFilas->setValue(
+        funcion->filas
+        );
+
+    ui->spinEditColumnas->setValue(
+        funcion->columnas
+        );
 }
 
 
 void MainWindow::on_btnBuscarFuncion_clicked()
 {
-    QString codigo = ui->txtBuscarCodFuncion->text().trimmed();
-    if (codigo.isEmpty()) return;
+    QString codigo =
+        ui->txtBuscarCodFuncion
+            ->text()
+            .trimmed();
 
-    // Usamos el método buscarFuncion que creamos pasos atrás
-    NodoAVL* funcion = arbolFunciones->buscarFuncion(codigo);
-
-    if (funcion != nullptr) {
-        ui->txtEditCodFuncion->setText(QString::fromStdString(funcion->codigo_funcion));
-        ui->txtEditPelicula->setText(QString::fromStdString(funcion->codigo_pelicula));
-        ui->txtEditHorario->setText(QString::fromStdString(funcion->horario));
-        ui->txtEditSala->setText(QString::fromStdString(funcion->sala));
-        ui->spinEditFilas->setValue(funcion->filas);
-        ui->spinEditColumnas->setValue(funcion->columnas);
-
-        QMessageBox::information(this, "Encontrada", "Función cargada para edición.");
-    } else {
-        QMessageBox::warning(this, "No encontrada", "No existe la función " + codigo);
+    if (codigo.isEmpty()) {
+        return;
     }
+
+    NodoAVL* funcion =
+        arbolFunciones->buscarFuncion(
+            codigo
+            );
+
+    if (funcion == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "No encontrada",
+            "No existe la función " +
+                codigo
+            );
+
+        return;
+    }
+
+
+    ui->txtEditCodFuncion->setText(
+        QString::fromStdString(
+            funcion->codigo_funcion
+            )
+        );
+
+
+    int indicePelicula =
+        ui->cmbEditPelicula->findData(
+            QString::fromStdString(
+                funcion->codigo_pelicula_real
+                )
+            );
+
+    ui->cmbEditPelicula->setCurrentIndex(
+        indicePelicula
+        );
+
+
+    QDate fecha =
+        QDate::fromString(
+            QString::fromStdString(
+                funcion->fecha
+                ),
+            "yyyy-MM-dd"
+            );
+
+    ui->dateEditFechaFuncion->setDate(
+        fecha.isValid()
+            ? fecha
+            : QDate::currentDate()
+        );
+
+
+    int indiceSede =
+        ui->cmbEditSedeFuncion->findData(
+            QString::fromStdString(
+                funcion->codigo_sede
+                )
+            );
+
+    ui->cmbEditSedeFuncion->setCurrentIndex(
+        indiceSede
+        );
+
+
+    ui->txtEditHorario->setText(
+        QString::fromStdString(
+            funcion->horario
+            )
+        );
+
+    ui->txtEditSala->setText(
+        QString::fromStdString(
+            funcion->sala
+            )
+        );
+
+    ui->spinEditFilas->setValue(
+        funcion->filas
+        );
+
+    ui->spinEditColumnas->setValue(
+        funcion->columnas
+        );
+
+    QMessageBox::information(
+        this,
+        "Encontrada",
+        "Función cargada para edición."
+        );
 }
 
 void MainWindow::on_btnGuardarEdicionFuncion_clicked()
 {
-    QString codigo = ui->txtEditCodFuncion->text();
+    QString codigo =
+        ui->txtEditCodFuncion
+            ->text()
+            .trimmed();
+
     if (codigo.isEmpty()) {
-        QMessageBox::warning(this, "Atención", "Seleccione una función para editar.");
+
+        QMessageBox::warning(
+            this,
+            "Atención",
+            "Seleccione una función para editar."
+            );
+
         return;
     }
 
-    NodoAVL* funcion = arbolFunciones->buscarFuncion(codigo);
 
-    if (funcion != nullptr) {
-        // Actualizamos los datos del nodo. codigo_pelicula conserva el título
-        // histórico de Fase 2. Si el título corresponde a una película real,
-        // sincronizamos también su código inequívoco sin romper el flujo antiguo.
-        QString nuevoTitulo =
-            ui->txtEditPelicula->text().trimmed();
+    NodoAVL* funcion =
+        arbolFunciones->buscarFuncion(
+            codigo
+            );
 
-        /*
- * La función debe continuar asociada a una película real.
- * No modificamos el nodo si el título introducido no corresponde
- * a ninguna película del BST.
- */
-        Pelicula* peliculaAsociada =
-            arbolCartelera->buscarPeliculaPorTitulo(
-                nuevoTitulo
-                );
+    if (funcion == nullptr) {
 
-        if (peliculaAsociada == nullptr) {
+        QMessageBox::warning(
+            this,
+            "Error",
+            "La función ya no existe."
+            );
 
-            QMessageBox::warning(
-                this,
-                "Película inválida",
-                "No existe una película registrada con el título indicado."
-                );
-
-            return;
-        }
-
-        /*
- * codigo_pelicula conserva el título por compatibilidad Fase 2.
- * codigo_pelicula_real conserva la identificación inequívoca Fase 3.
- */
-        funcion->codigo_pelicula =
-            peliculaAsociada->titulo.toStdString();
-
-        funcion->codigo_pelicula_real =
-            peliculaAsociada->codigo.toStdString();
-
-        funcion->horario =
-            ui->txtEditHorario->text().toStdString();
-
-        funcion->sala =
-            ui->txtEditSala->text().toStdString();
-
-        funcion->filas =
-            ui->spinEditFilas->value();
-
-        funcion->columnas =
-            ui->spinEditColumnas->value();
-
-        /*
- * fecha y codigo_sede NO se modifican aquí porque la UI actual
- * todavía no tiene esos controles.
- */
-        // Una edición de película puede modificar las relaciones entre sedes.
-        sincronizarGrafoConFunciones();
-        // Refrescar tabla de funciones
-        arbolFunciones->poblarTablaUI(ui->tblFunciones);
-
-        QMessageBox::information(this, "Éxito", "Función " + codigo + " actualizada correctamente.");
+        return;
     }
+
+
+    QString codigoPelicula =
+        ui->cmbEditPelicula
+            ->currentData()
+            .toString();
+
+    Pelicula* pelicula =
+        arbolCartelera->buscarPelicula(
+            codigoPelicula
+            );
+
+    if (pelicula == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "Película inválida",
+            "Seleccione una película válida."
+            );
+
+        return;
+    }
+
+
+    QString codigoSede =
+        ui->cmbEditSedeFuncion
+            ->currentData()
+            .toString();
+
+    if (codigoSede.isEmpty() ||
+        grafoSedes->buscarSede(
+            codigoSede.toStdString()
+            ) == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "Sede inválida",
+            "Seleccione una sede válida."
+            );
+
+        return;
+    }
+
+
+    QString fecha =
+        ui->dateEditFechaFuncion
+            ->date()
+            .toString("yyyy-MM-dd");
+
+    QString horario =
+        ui->txtEditHorario
+            ->text()
+            .trimmed();
+
+    QString sala =
+        ui->txtEditSala
+            ->text()
+            .trimmed();
+
+    int filas =
+        ui->spinEditFilas->value();
+
+    int columnas =
+        ui->spinEditColumnas->value();
+
+
+    if (horario.isEmpty() ||
+        sala.isEmpty() ||
+        filas <= 0 ||
+        columnas <= 0) {
+
+        QMessageBox::warning(
+            this,
+            "Datos inválidos",
+            "Complete los datos de la función correctamente."
+            );
+
+        return;
+    }
+
+
+    funcion->codigo_pelicula =
+        pelicula->titulo.toStdString();
+
+    funcion->codigo_pelicula_real =
+        pelicula->codigo.toStdString();
+
+    funcion->fecha =
+        fecha.toStdString();
+
+    funcion->codigo_sede =
+        codigoSede.toStdString();
+
+    funcion->horario =
+        horario.toStdString();
+
+    funcion->sala =
+        sala.toStdString();
+
+    funcion->filas =
+        filas;
+
+    funcion->columnas =
+        columnas;
+
+
+    sincronizarGrafoConFunciones();
+
+    arbolFunciones->poblarTablaUI(
+        ui->tblFunciones
+        );
+
+    refrescarControlesE4();
+
+    QMessageBox::information(
+        this,
+        "Éxito",
+        "Función " +
+            codigo +
+            " actualizada correctamente."
+        );
 }
 
 void MainWindow::on_btnEliminarFun_clicked()
@@ -2140,10 +2810,18 @@ void MainWindow::on_btnEliminarFun_clicked()
 
         // 3. ACTUALIZAR INTERFAZ
         arbolFunciones->poblarTablaUI(ui->tblFunciones);
-
+        refrescarControlesE4();
         // Limpiamos los inputs
         ui->txtEditCodFuncion->clear();
-        ui->txtEditPelicula->clear();
+
+        ui->cmbEditPelicula->setCurrentIndex(-1);
+
+        ui->dateEditFechaFuncion->setDate(
+            QDate::currentDate()
+            );
+
+        ui->cmbEditSedeFuncion->setCurrentIndex(-1);
+
         ui->txtEditHorario->clear();
         ui->txtEditSala->clear();
         ui->txtBuscarCodFuncion->clear();
@@ -2326,11 +3004,43 @@ void MainWindow::on_btnReporteMatriz_clicked()
     }
 
     // 2. Extraer metadatos para el reporte
-    QString pelicula = ui->txtEditPelicula->text();
-    QString horario = ui->txtEditHorario->text();
-    QString sala = ui->txtEditSala->text();
-    int filas = ui->spinEditFilas->value();
-    int columnas = ui->spinEditColumnas->value();
+    NodoAVL* funcion =
+        arbolFunciones->buscarFuncion(
+            codFuncion
+            );
+
+    if (funcion == nullptr) {
+
+        QMessageBox::warning(
+            this,
+            "Error",
+            "La función seleccionada ya no existe."
+            );
+
+        return;
+    }
+
+    // 2. Extraer metadatos directamente de la función real
+    QString pelicula =
+        QString::fromStdString(
+            funcion->codigo_pelicula
+            );
+
+    QString horario =
+        QString::fromStdString(
+            funcion->horario
+            );
+
+    QString sala =
+        QString::fromStdString(
+            funcion->sala
+            );
+
+    int filas =
+        funcion->filas;
+
+    int columnas =
+        funcion->columnas;
 
     // 3. Cargar la matriz actualizada desde su JSON
     QString archivoJSON = codFuncion + "_funcion.json";
@@ -2419,3 +3129,916 @@ void MainWindow::on_cbOrdenFunciones_currentTextChanged(const QString &arg1)
         arbolFunciones->poblarTablaFuncionesUI(ui->tblFunciones, arg1);
     }
 }
+
+void MainWindow::on_cmbSedeReserva_currentIndexChanged(
+    int index)
+{
+    Q_UNUSED(index);
+
+    poblarFuncionesPorPeliculaYSede(
+        ui->cbFuncionesDisponibles,
+        ui->cbPeliculasDisponibles
+            ->currentData()
+            .toString(),
+        ui->cmbSedeReserva
+            ->currentData()
+            .toString()
+        );
+}
+
+
+void MainWindow::on_btnRegistrarSede_clicked()
+{
+    QString codigo =
+        ui->txtCodigoSedeAdmin
+            ->text()
+            .trimmed();
+
+    QString nombre =
+        ui->txtNombreSedeAdmin
+            ->text()
+            .trimmed();
+
+    QString direccion =
+        ui->txtDireccionSedeAdmin
+            ->text()
+            .trimmed();
+
+    QString telefono =
+        ui->txtTelefonoSedeAdmin
+            ->text()
+            .trimmed();
+
+    int cantidadSalas =
+        ui->spinCantidadSalasSedeAdmin
+            ->value();
+
+
+    if (codigo.isEmpty() ||
+        nombre.isEmpty() ||
+        direccion.isEmpty() ||
+        telefono.isEmpty() ||
+        cantidadSalas <= 0) {
+
+        QMessageBox::warning(
+            this,
+            "Datos incompletos",
+            "Complete correctamente todos los datos de la sede."
+            );
+
+        return;
+    }
+
+
+    Sede nuevaSede(
+        codigo.toStdString(),
+        nombre.toStdString(),
+        direccion.toStdString(),
+        cantidadSalas,
+        telefono.toStdString()
+        );
+
+
+    if (!grafoSedes->insertarSede(
+            nuevaSede)) {
+
+        QMessageBox::warning(
+            this,
+            "Sede duplicada",
+            "Ya existe una sede con el código " +
+                codigo +
+                "."
+            );
+
+        return;
+    }
+
+
+    /*
+     * No se recalcula el grafo:
+     * registrar una sede crea un vértice aislado.
+     */
+    refrescarControlesE4();
+
+
+    ui->txtCodigoSedeAdmin->clear();
+    ui->txtNombreSedeAdmin->clear();
+    ui->txtDireccionSedeAdmin->clear();
+    ui->txtTelefonoSedeAdmin->clear();
+
+    ui->spinCantidadSalasSedeAdmin
+        ->setValue(1);
+
+
+    QMessageBox::information(
+        this,
+        "Sede registrada",
+        "La sede " +
+            codigo +
+            " fue registrada correctamente."
+        );
+}
+
+
+void MainWindow::on_btnConsultarPeliculasSede_clicked()
+{
+    ui->tblPeliculasSedeAdmin
+        ->setRowCount(0);
+
+    QString codigoSede =
+        ui->cmbSedePeliculasAdmin
+            ->currentData()
+            .toString();
+
+    if (codigoSede.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Sede",
+            "Seleccione una sede."
+            );
+
+        return;
+    }
+
+
+    struct ContextoPeliculasSede {
+        std::string codigoSede;
+        QStringList codigosPeliculas;
+    };
+
+    ContextoPeliculasSede contexto {
+        codigoSede.toStdString(),
+        QStringList()
+    };
+
+
+    auto visitarFuncion =
+        [](const NodoAVL* funcion,
+           void* datos) {
+
+            if (funcion == nullptr ||
+                datos == nullptr) {
+                return;
+            }
+
+            ContextoPeliculasSede* contexto =
+                static_cast<
+                    ContextoPeliculasSede*
+                    >(datos);
+
+            if (
+                funcion->codigo_sede !=
+                    contexto->codigoSede ||
+                funcion->codigo_pelicula_real
+                    .empty()
+                ) {
+                return;
+            }
+
+            QString codigoPelicula =
+                QString::fromStdString(
+                    funcion
+                        ->codigo_pelicula_real
+                    );
+
+            if (!contexto
+                     ->codigosPeliculas
+                     .contains(
+                         codigoPelicula
+                         )) {
+
+                contexto
+                    ->codigosPeliculas
+                    .append(
+                        codigoPelicula
+                        );
+            }
+        };
+
+
+    arbolFunciones->recorrerFunciones(
+        visitarFuncion,
+        &contexto
+        );
+
+    contexto.codigosPeliculas.sort();
+
+
+    for (const QString& codigoPelicula :
+         contexto.codigosPeliculas) {
+
+        int fila =
+            ui->tblPeliculasSedeAdmin
+                ->rowCount();
+
+        ui->tblPeliculasSedeAdmin
+            ->insertRow(fila);
+
+
+        Pelicula* pelicula =
+            arbolCartelera
+                ->buscarPelicula(
+                    codigoPelicula
+                    );
+
+
+        ui->tblPeliculasSedeAdmin
+            ->setItem(
+                fila,
+                0,
+                new QTableWidgetItem(
+                    codigoPelicula
+                    )
+                );
+
+
+        QString titulo =
+            pelicula != nullptr
+                ? pelicula->titulo
+                : "(sin datos en BST)";
+
+        ui->tblPeliculasSedeAdmin
+            ->setItem(
+                fila,
+                1,
+                new QTableWidgetItem(
+                    titulo
+                    )
+                );
+    }
+
+
+    if (contexto.codigosPeliculas.isEmpty()) {
+
+        QMessageBox::information(
+            this,
+            "Sin películas",
+            "La sede seleccionada no posee películas programadas."
+            );
+    }
+}
+
+
+void MainWindow::on_btnBuscarRutaSedes_clicked()
+{
+    QString origen =
+        ui->cmbSedeOrigenBFS
+            ->currentData()
+            .toString();
+
+    QString destino =
+        ui->cmbSedeDestinoBFS
+            ->currentData()
+            .toString();
+
+
+    if (origen.isEmpty() ||
+        destino.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Ruta",
+            "Seleccione origen y destino."
+            );
+
+        return;
+    }
+
+
+    ResultadoBFS resultado =
+        grafoSedes->buscarCaminoBFS(
+            origen.toStdString(),
+            destino.toStdString()
+            );
+
+
+    if (!resultado.origenEncontrado ||
+        !resultado.destinoEncontrado) {
+
+        ui->lblResultadoBFS->setText(
+            "Una de las sedes ya no existe."
+            );
+
+        return;
+    }
+
+
+    if (!resultado.existeCamino) {
+
+        ui->lblResultadoBFS->setText(
+            "No existe un camino entre " +
+            origen +
+            " y " +
+            destino +
+            "."
+            );
+
+        return;
+    }
+
+
+    QStringList ruta;
+
+    for (const std::string& codigo :
+         resultado.ruta) {
+
+        ruta.append(
+            QString::fromStdString(
+                codigo
+                )
+            );
+    }
+
+
+    int saltos =
+        ruta.isEmpty()
+            ? 0
+            : ruta.size() - 1;
+
+
+    ui->lblResultadoBFS->setText(
+        "Ruta: " +
+        ruta.join(" → ") +
+        "\nSaltos: " +
+        QString::number(
+            saltos
+            )
+        );
+}
+
+
+void MainWindow::on_btnActualizarRankingSedes_clicked()
+{
+    ui->tblRankingSedesAdmin
+        ->setRowCount(0);
+
+    std::vector<RelacionGrafo> ranking =
+        grafoSedes
+            ->obtenerRankingRelaciones();
+
+    for (const RelacionGrafo& relacion :
+         ranking) {
+
+        int fila =
+            ui->tblRankingSedesAdmin
+                ->rowCount();
+
+        ui->tblRankingSedesAdmin
+            ->insertRow(fila);
+
+        ui->tblRankingSedesAdmin
+            ->setItem(
+                fila,
+                0,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        relacion.sedeA
+                        )
+                    )
+                );
+
+        ui->tblRankingSedesAdmin
+            ->setItem(
+                fila,
+                1,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        relacion.sedeB
+                        )
+                    )
+                );
+
+        ui->tblRankingSedesAdmin
+            ->setItem(
+                fila,
+                2,
+                new QTableWidgetItem(
+                    QString::number(
+                        relacion.peso
+                        )
+                    )
+                );
+    }
+
+
+    if (ranking.empty()) {
+
+        QMessageBox::information(
+            this,
+            "Ranking",
+            "Actualmente no existen relaciones entre sedes."
+            );
+    }
+}
+
+
+void MainWindow::on_btnConsultarSedesPeliculaCliente_clicked()
+{
+    ui->tblSedesPeliculaCliente
+        ->setRowCount(0);
+
+    QString codigoPelicula =
+        ui->cmbPeliculaSedesCliente
+            ->currentData()
+            .toString();
+
+    if (codigoPelicula.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Película",
+            "Seleccione una película."
+            );
+
+        return;
+    }
+
+
+    const NodoGrafo* sede =
+        grafoSedes
+            ->obtenerPrimeraSede();
+
+    int sedesEncontradas = 0;
+
+
+    while (sede != nullptr) {
+
+        struct ContextoDetalleSede {
+            std::string codigoPelicula;
+            std::string codigoSede;
+            QStringList detalles;
+        };
+
+
+        ContextoDetalleSede contexto {
+            codigoPelicula.toStdString(),
+            sede->sede.codigo,
+            QStringList()
+        };
+
+
+        auto visitarFuncion =
+            [](const NodoAVL* funcion,
+               void* datos) {
+
+                if (funcion == nullptr ||
+                    datos == nullptr) {
+                    return;
+                }
+
+                ContextoDetalleSede* contexto =
+                    static_cast<
+                        ContextoDetalleSede*
+                        >(datos);
+
+                if (
+                    funcion->codigo_pelicula_real !=
+                        contexto->codigoPelicula ||
+                    funcion->codigo_sede !=
+                        contexto->codigoSede
+                    ) {
+                    return;
+                }
+
+
+                QString detalle =
+                    QString::fromStdString(
+                        funcion->codigo_funcion
+                        ) +
+                    " | " +
+                    QString::fromStdString(
+                        funcion->fecha
+                        ) +
+                    " | " +
+                    QString::fromStdString(
+                        funcion->horario
+                        ) +
+                    " | " +
+                    QString::fromStdString(
+                        funcion->sala
+                        );
+
+                contexto
+                    ->detalles
+                    .append(
+                        detalle
+                        );
+            };
+
+
+        arbolFunciones->recorrerFunciones(
+            visitarFuncion,
+            &contexto
+            );
+
+
+        if (!contexto.detalles.isEmpty()) {
+
+            int fila =
+                ui->tblSedesPeliculaCliente
+                    ->rowCount();
+
+            ui->tblSedesPeliculaCliente
+                ->insertRow(fila);
+
+            ui->tblSedesPeliculaCliente
+                ->setItem(
+                    fila,
+                    0,
+                    new QTableWidgetItem(
+                        QString::fromStdString(
+                            sede->sede.codigo
+                            )
+                        )
+                    );
+
+            ui->tblSedesPeliculaCliente
+                ->setItem(
+                    fila,
+                    1,
+                    new QTableWidgetItem(
+                        QString::fromStdString(
+                            sede->sede.nombre
+                            )
+                        )
+                    );
+
+            ui->tblSedesPeliculaCliente
+                ->setItem(
+                    fila,
+                    2,
+                    new QTableWidgetItem(
+                        contexto
+                            .detalles
+                            .join(" ; ")
+                        )
+                    );
+
+            sedesEncontradas++;
+        }
+
+
+        sede =
+            sede->siguiente;
+    }
+
+
+    if (sedesEncontradas == 0) {
+
+        QMessageBox::information(
+            this,
+            "Disponibilidad",
+            "La película seleccionada no tiene funciones programadas."
+            );
+    }
+}
+
+
+void MainWindow::on_cmbPeliculaFuncionesCliente_currentIndexChanged(
+    int index)
+{
+    Q_UNUSED(index);
+
+    poblarSedesPorPelicula(
+        ui->cmbSedeFuncionesCliente,
+        ui->cmbPeliculaFuncionesCliente
+            ->currentData()
+            .toString()
+        );
+
+    ui->tblFuncionesClienteGrafo
+        ->setRowCount(0);
+}
+
+
+void MainWindow::on_btnConsultarFuncionesCliente_clicked()
+{
+    ui->tblFuncionesClienteGrafo
+        ->setRowCount(0);
+
+    QString codigoPelicula =
+        ui->cmbPeliculaFuncionesCliente
+            ->currentData()
+            .toString();
+
+    QString codigoSede =
+        ui->cmbSedeFuncionesCliente
+            ->currentData()
+            .toString();
+
+
+    if (codigoPelicula.isEmpty() ||
+        codigoSede.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Consulta",
+            "Seleccione una película y una sede válidas."
+            );
+
+        return;
+    }
+
+
+    struct ContextoTablaFunciones {
+        std::string codigoPelicula;
+        std::string codigoSede;
+        QTableWidget* tabla;
+        int cantidad;
+    };
+
+
+    ContextoTablaFunciones contexto {
+        codigoPelicula.toStdString(),
+        codigoSede.toStdString(),
+        ui->tblFuncionesClienteGrafo,
+        0
+    };
+
+
+    auto visitarFuncion =
+        [](const NodoAVL* funcion,
+           void* datos) {
+
+            if (funcion == nullptr ||
+                datos == nullptr) {
+                return;
+            }
+
+
+            ContextoTablaFunciones* contexto =
+                static_cast<
+                    ContextoTablaFunciones*
+                    >(datos);
+
+
+            if (
+                funcion->codigo_pelicula_real !=
+                    contexto->codigoPelicula ||
+                funcion->codigo_sede !=
+                    contexto->codigoSede
+                ) {
+                return;
+            }
+
+
+            int fila =
+                contexto->tabla
+                    ->rowCount();
+
+            contexto->tabla
+                ->insertRow(fila);
+
+
+            contexto->tabla->setItem(
+                fila,
+                0,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        funcion->codigo_funcion
+                        )
+                    )
+                );
+
+            contexto->tabla->setItem(
+                fila,
+                1,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        funcion->fecha
+                        )
+                    )
+                );
+
+            contexto->tabla->setItem(
+                fila,
+                2,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        funcion->horario
+                        )
+                    )
+                );
+
+            contexto->tabla->setItem(
+                fila,
+                3,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        funcion->sala
+                        )
+                    )
+                );
+
+
+            contexto->cantidad++;
+        };
+
+
+    arbolFunciones->recorrerFunciones(
+        visitarFuncion,
+        &contexto
+        );
+
+
+    if (contexto.cantidad == 0) {
+
+        QMessageBox::information(
+            this,
+            "Funciones",
+            "No existen funciones para esa combinación de película y sede."
+            );
+    }
+}
+
+
+void MainWindow::on_btnConsultarSedesSimilaresCliente_clicked()
+{
+    ui->tblSedesSimilaresCliente
+        ->setRowCount(0);
+
+    QString codigoSede =
+        ui->cmbSedeSimilarCliente
+            ->currentData()
+            .toString();
+
+
+    if (codigoSede.isEmpty()) {
+
+        QMessageBox::warning(
+            this,
+            "Sede",
+            "Seleccione una sede."
+            );
+
+        return;
+    }
+
+
+    std::vector<SedeSimilar> similares =
+        grafoSedes->obtenerSedesSimilares(
+            codigoSede.toStdString()
+            );
+
+
+    for (const SedeSimilar& similar :
+         similares) {
+
+        int fila =
+            ui->tblSedesSimilaresCliente
+                ->rowCount();
+
+        ui->tblSedesSimilaresCliente
+            ->insertRow(fila);
+
+
+        ui->tblSedesSimilaresCliente
+            ->setItem(
+                fila,
+                0,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        similar.sede.codigo
+                        )
+                    )
+                );
+
+        ui->tblSedesSimilaresCliente
+            ->setItem(
+                fila,
+                1,
+                new QTableWidgetItem(
+                    QString::fromStdString(
+                        similar.sede.nombre
+                        )
+                    )
+                );
+
+        ui->tblSedesSimilaresCliente
+            ->setItem(
+                fila,
+                2,
+                new QTableWidgetItem(
+                    QString::number(
+                        similar.peso
+                        )
+                    )
+                );
+    }
+
+
+    if (similares.empty()) {
+
+        QMessageBox::information(
+            this,
+            "Sedes similares",
+            "La sede seleccionada no posee sedes adyacentes."
+            );
+    }
+}
+
+
+void MainWindow::on_btnReporteGrafoSedes_clicked()
+{
+    ui->lblVisorAdmin->clear();
+
+    if (!grafoSedes
+             ->generarReporteGrafoGraphviz()) {
+
+        QMessageBox::warning(
+            this,
+            "Graphviz",
+            "No se pudo generar el reporte del grafo de sedes."
+            );
+
+        return;
+    }
+
+
+    QImage imagen(
+        "reporte_grafo_sedes.png"
+        );
+
+
+    if (imagen.isNull()) {
+
+        QMessageBox::warning(
+            this,
+            "Reporte",
+            "No se pudo cargar reporte_grafo_sedes.png."
+            );
+
+        return;
+    }
+
+
+    ui->lblVisorAdmin->setPixmap(
+        QPixmap::fromImage(imagen)
+            .scaled(
+                ui->lblVisorAdmin->size(),
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                )
+        );
+
+
+    QMessageBox::information(
+        this,
+        "Reporte Generado",
+        "El grafo de sedes ha sido renderizado."
+        );
+}
+
+
+void MainWindow::on_btnReporteListaAdyacencia_clicked()
+{
+    ui->lblVisorAdmin->clear();
+
+    if (!grafoSedes
+             ->generarReporteListaAdyacenciaGraphviz()) {
+
+        QMessageBox::warning(
+            this,
+            "Graphviz",
+            "No se pudo generar el reporte de la lista de adyacencia."
+            );
+
+        return;
+    }
+
+
+    QImage imagen(
+        "reporte_lista_adyacencia.png"
+        );
+
+
+    if (imagen.isNull()) {
+
+        QMessageBox::warning(
+            this,
+            "Reporte",
+            "No se pudo cargar reporte_lista_adyacencia.png."
+            );
+
+        return;
+    }
+
+
+    ui->lblVisorAdmin->setPixmap(
+        QPixmap::fromImage(imagen)
+            .scaled(
+                ui->lblVisorAdmin->size(),
+                Qt::KeepAspectRatio,
+                Qt::SmoothTransformation
+                )
+        );
+
+
+    QMessageBox::information(
+        this,
+        "Reporte Generado",
+        "La lista de adyacencia ha sido renderizada."
+        );
+}
+
