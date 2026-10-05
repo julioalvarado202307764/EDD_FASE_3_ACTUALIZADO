@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ImgLogin.png</file>
+        <file>imgAdmin.png</file>
+        <file>imgUser.png</file>
+        <file>imgEdit.png</file>
+        <file>imgFuncion.png</file>
+        <file>imgCustomer.png</file>
+        <file>imgCinema.png</file>
+        <file>imgTicket.png</file>
+        <file>imgRegistro.png</file>
+        <file>imgTaquilla.png</file>
+        <file>imgEditProfile.png</file>
+    </qresource>
+</RCC>

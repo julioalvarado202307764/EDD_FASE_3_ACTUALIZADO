@@ -1,0 +1,6 @@
+digraph ListaSolicitudes {
+rankdir=LR;
+node [shape=box, style="rounded,filled", fillcolor="#ffdab9", fontname="Helvetica"];
+node1 [label="Número: 1\nCliente: fdasfasd\nTipo: Cumpleaños\nEstado: Pendiente"];
+node1 -> node1 [dir=both];
+}

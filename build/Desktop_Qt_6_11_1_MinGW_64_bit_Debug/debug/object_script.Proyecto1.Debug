@@ -1,0 +1,14 @@
+debug/ArbolAVL.o
+debug/ArbolB.o
+debug/ArbolPeliculas.o
+debug/GrafoSedes.o
+debug/ListaPromociones.o
+debug/ListaSolicitudes.o
+debug/MatrizDispersa.o
+debug/NodoAVL.o
+debug/NodoB.o
+debug/TablaHash.o
+debug/main.o
+debug/mainwindow.o
+debug/qrc_images.o
+debug/moc_mainwindow.o

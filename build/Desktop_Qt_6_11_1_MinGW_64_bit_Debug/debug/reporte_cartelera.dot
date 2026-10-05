@@ -1,0 +1,28 @@
+digraph ArbolCartelera {
+  node [fontname="Helvetica"];
+  "P078" [label="Código: P078\nTítulo: El Ultimo Asalto\nDuración: 135 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#fff59d"];
+  "P078" -> "P005";
+  "P005" [label="Código: P005\nTítulo: Sombras en la Noche\nDuración: 118 min\nClasificación: C", shape=box, style="rounded,filled", fillcolor="#fff59d"];
+  "P005" -> "P002";
+  "P002" [label="Código: P002\nTítulo: Mundos Paralelos\nDuración: 150 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P005" -> "P064";
+  "P064" [label="Código: P064\nTítulo: Galaxia Perdida\nDuración: 142 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P064" -> "P021";
+  "P021" [label="Código: P021\nTítulo: La Aventura de Max\nDuración: 96 min\nClasificación: AA", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P021" -> "P009";
+  "P009" [label="Código: P009\nTítulo: Noche de Pesadilla\nDuración: 124 min\nClasificación: C", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P021" -> "P046";
+  "P046" [label="Código: P046\nTítulo: Amor en la Ciudad\nDuración: 121 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P078" -> "P112";
+  "P112" [label="Código: P112\nTítulo: Risas de Domingo\nDuración: 105 min\nClasificación: A", shape=box, style="rounded,filled", fillcolor="#fff59d"];
+  "P112" -> "P089";
+  "P089" [label="Código: P089\nTítulo: Un Lugar Para Nosotros\nDuración: 127 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P089" -> "P101";
+  "P101" [label="Código: P101\nTítulo: El Reino Perdido\nDuración: 138 min\nClasificación: AA", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P101" -> "P090";
+  "P090" [label="Código: P090\nTítulo: Entre Dos Caminos\nDuración: 133 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P112" -> "P119";
+  "P119" [label="Código: P119\nTítulo: Horizonte Final\nDuración: 146 min\nClasificación: B15", shape=box, style="rounded,filled", fillcolor="#a2f0a2"];
+  "P119" -> "P777";
+  "P777" [label="Código: P777\nTítulo: El viaje de chijiro\nDuración: 300 min\nClasificación: C", shape=box, style="rounded,filled", fillcolor="#fff59d"];
+}
