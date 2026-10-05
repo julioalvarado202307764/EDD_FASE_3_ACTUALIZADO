@@ -1,0 +1,53 @@
+# ---------------------------------------------------
+# Directorios de compilación (¡Lo más importante!)
+# ---------------------------------------------------
+# Ignora la carpeta 'build' que se ve en tu imagen
+build/
+build-*/
+debug/
+release/
+# Directorios de compilación generados por Qt Creator
+build/
+build-*/
+*-build-*
+build_*/
+
+# ---------------------------------------------------
+# Archivos de configuración de usuario de Qt Creator
+# ---------------------------------------------------
+# Estos archivos guardan las rutas de tu compu (C:\Users\daish...)
+# Si los subes, le arruinarás las rutas a quien descargue el proyecto
+*.pro.user
+*.pro.user.*
+.qtcreator/
+
+# ---------------------------------------------------
+# Archivos compilados y ejecutables
+# ---------------------------------------------------
+*.o
+*.obj
+*.exe
+*.dll
+*.a
+*.so
+*.app
+
+# ---------------------------------------------------
+# Archivos autogenerados por Qt (Makefiles, moc, ui, rcc)
+# ---------------------------------------------------
+# Qt genera estos archivos automáticamente al compilar
+Makefile
+Makefile.*
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+
+# ---------------------------------------------------
+# Archivos del sistema operativo (Opcional pero recomendado)
+# ---------------------------------------------------
+.DS_Store
+Thumbs.db
+
+
+*.autosave
